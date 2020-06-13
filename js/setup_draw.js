@@ -46,6 +46,7 @@ function draw() {
     clear()
     current = hull[hull.length - 1]
     for (let i = 0; i < num_points; i++) {
+        strokeWeight(1);
         if (hull.includes(i)) {
             fill('green')
             circle(canvas_xs[i], canvas_ys[i], 10)
@@ -59,19 +60,18 @@ function draw() {
             circle(canvas_xs[i], canvas_ys[i], 10)
         }
     }
-    
+    strokeWeight(1)    
     line(canvas_xs[current], canvas_ys[current], canvas_xs[counter], canvas_ys[counter])
-    strokeWeight(3)
     vector = [canvas_xs[counter] - canvas_xs[current], canvas_ys[counter] - canvas_ys[current]]
     angle = dot(vector, dir)/(norma(vector) * norma(dir))
     if (angle > compare) {
         compare = angle
         best    = counter
     }
-    strokeWeight(1);
+    strokeWeight(3);
     if (!stopping) {
-        line(canvas_xs[current], canvas_ys[current], canvas_xs[current] + width * dir[0], canvas_ys[current] + height * dir[1])
-        line(canvas_xs[current], canvas_ys[current], canvas_xs[current] - width * dir[0], canvas_ys[current] - height * dir[1])
+        line(canvas_xs[hull[hull.length - 1]], canvas_ys[hull[hull.length - 1]], canvas_xs[hull[hull.length - 1]] + width * dir[0], canvas_ys[hull[hull.length - 1]] + width * dir[1])
+        line(canvas_xs[hull[hull.length - 1]], canvas_ys[hull[hull.length - 1]], canvas_xs[hull[hull.length - 1]] - width * dir[0], canvas_ys[hull[hull.length - 1]] - width * dir[1])
     }
     
     counter++
@@ -82,7 +82,7 @@ function draw() {
         else {
             stopping = true;
         }
-        dir = [canvas_xs[best] - canvas_xs[current], canvas_ys[best] - canvas_ys[current]]
+        dir = [canvas_xs[best] - canvas_xs[hull[hull.length - 2]], canvas_ys[best] - canvas_ys[hull[hull.length - 2]]]
         counter = counter - num_points
         compare = -1;
     }
@@ -90,6 +90,7 @@ function draw() {
     if (stopping) {
         clear();
         for (let i = 0; i < num_points; i++) {
+            strokeWeight(1);
             if (hull.includes(i)) {
                 fill('green')
                 circle(canvas_xs[i], canvas_ys[i], 10)
@@ -100,6 +101,7 @@ function draw() {
             }
         }
         fill(color(0, 255, 0, 100))
+        strokeWeight(3);
         beginShape()
         for (let i = 0; i < hull.length - 1; i++) {
             vertex(canvas_xs[hull[i]], canvas_ys[hull[i]])
