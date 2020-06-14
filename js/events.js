@@ -4,6 +4,7 @@ function onClick(event) {
         mousepos = {x: (event.clientX - rect.left) / (rect.right - rect.left) * w,
             y: (event.clientY - rect.top) / (rect.bottom - rect.top) * h
         };
+        console.log(mousepos)
         algorithm = false   
         resetArgs();
         stopping  = false
@@ -17,7 +18,7 @@ function onClick(event) {
                 better = diff;
             }
         }
-        if (better < 10) {
+        if (better <= 10) {
             removefromArray(xs, xs[index])
             removefromArray(ys, ys[index])
             removefromArray(canvas_xs, canvas_xs[index])
@@ -28,6 +29,7 @@ function onClick(event) {
             ys.push(map(mousepos.y , 0, height, -0.1, 1.1))
             canvas_xs.push(mousepos.x)
             canvas_ys.push(mousepos.y)
+            console.log(xs[xs.length - 1], ys[ys.length - 1])
         }
         loop()
     }
