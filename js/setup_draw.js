@@ -1,38 +1,3 @@
-// GLOBALS
-let xs         = []; //x coordinates of points
-let ys         = []; //y coordinates of points
-let canvas_xs  = []; //canvas x coordinates of points
-let canvas_ys  = []; //canvas y coordinates of points
-let hull       = []; //indexes of boundary of convex hull
-let num_points = 50; //number of points
-let counter    = 0;  //keeps track of which point to check during animation 
-let fr         = 30; //frame rate
-let compare    = -1; // value between -1 and 1 to be compared every frame
-let angle      = -1; // value that will be calculated every frame
-let stopping = false; // keeps track of when to draw the convex hull
-let dir        = [0, 1]; // current direction to be compared with each of the possible ones
-let best; //keeps track at the index of the point that should be added to the hull;
-let vector; // vector to be calculated every frame
-let current; // keeps track of the current point in the hull
-let algorithm;
-let addPoint;
-
-function removefromArray(array, element) {
-    for (let i = array.length-1; i >= 0; i--) {
-        if (array[i] ==  element) {
-            array.splice(i, 1);
-        }
-    }
-}
-
-function norma(arr) {
-    return Math.sqrt(arr[0]**2 + arr[1]**2)
-}
-
-function dot(arr1, arr2) {
-    return arr1[0] * arr2[0] + arr1[1] * arr2[1]
-}
-
 function setup() {
     
     // creating button to add random point
@@ -54,11 +19,7 @@ function setup() {
     genrandbtn.mousePressed(() => {
         algorithm = false
         stopping  = false
-        dir       = [0, 1]
-        hull      = []
-        counter   = 0
-        compare   = -1
-        angle     = -1
+        resetArgs();
         xs        = []
         ys        = []
         canvas_xs = []
@@ -75,11 +36,7 @@ function setup() {
     addrandbtn.mousePressed(() => {
         algorithm = false
         stopping  = false
-        dir       = [0, 1]
-        hull      = []
-        counter   = 0
-        compare   = -1
-        angle     = -1
+        resetArgs();
         num_points ++
         xs.push(Math.random())
         ys.push(Math.random())
@@ -91,11 +48,7 @@ function setup() {
     removerandbtn.mousePressed(() => {
         algorithm = false
         stopping  = false
-        dir       = [0, 1]
-        hull      = []
-        counter   = 0
-        compare   = -1
-        angle     = -1
+        resetArgs();
         num_points --
         let random = xs.length * Math.random()
         removefromArray(xs, xs[Math.floor(random)])
@@ -107,19 +60,15 @@ function setup() {
 
     algbtn.mousePressed(() => {
         algorithm = true   
-        dir       = [0, 1]
-        hull      = []
-        counter   = 0
-        compare   = -1
-        angle     = -1
+        resetArgs();
         stopping  = false
         loop()
     })
 
     frameRate(fr);
-    var canvas = createCanvas(window.innerWidth - 100, 450);
+    var canvas = createCanvas(w, h);
     canvas.parent('canvasHere')
-    var rect = document.getElementById('defaultCanvas0').getBoundingClientRect();
+    document.getElementById('defaultCanvas0').addEventListener('click', onClick);
 }
 
 function draw() {
@@ -128,7 +77,7 @@ function draw() {
         hull.push(xs.indexOf(Math.min(...xs)))
     }
     current = hull[hull.length - 1]
-    for (let i = 0; i < Math.min(num_points, xs.length); i++) {
+    for (let i = 0; i < xs.length; i++) {
         strokeWeight(1);
         if (hull.includes(i)) {
             fill('green')
@@ -173,7 +122,7 @@ function draw() {
         }
         
         counter++
-        if (counter == Math.min(num_points, xs.length)) {
+        if (counter == xs.length) {
             hull.push(best)
             if (best != hull[0]) {
             }
@@ -181,13 +130,13 @@ function draw() {
                 stopping = true;
             }
             dir = [canvas_xs[best] - canvas_xs[hull[hull.length - 2]], canvas_ys[best] - canvas_ys[hull[hull.length - 2]]]
-            counter = counter - Math.min(num_points, xs.length)
+            counter = counter - xs.length
             compare = -1;
         }
 
         if (stopping) {
             clear();
-            for (let i = 0; i < Math.min(num_points, xs.length); i++) {
+            for (let i = 0; i < xs.length; i++) {
                 strokeWeight(1);
                 if (hull.includes(i)) {
                     fill('green')
@@ -207,7 +156,6 @@ function draw() {
             endShape(CLOSE)
             console.log('yay')  
             noLoop()      
-
         }
     }
 }
