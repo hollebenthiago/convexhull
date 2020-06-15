@@ -31,6 +31,5 @@ function onClick(event) {
             canvas_ys.push(mousepos.y)
             console.log(xs[xs.length - 1], ys[ys.length - 1])
         }
-        loop()
     }
 } 

@@ -1,3 +1,5 @@
+let slider;
+
 function setup() {
     
     // creating button to add random point
@@ -16,6 +18,9 @@ function setup() {
     var algbtn = createButton('Start/Restart the algorithm');
     algbtn.parent('buttonsHere')
 
+    // creating slider to change speed
+    slider = createSlider(1, 30, 5, 1)
+    
     genrandbtn.mousePressed(() => {
         algorithm = false
         stopping  = false
@@ -69,10 +74,15 @@ function setup() {
     var canvas = createCanvas(w, h);
     canvas.parent('canvasHere')
     document.getElementById('defaultCanvas0').addEventListener('click', onClick);
+    document.getElementById('defaultCanvas0').addEventListener('mouseup', ()=> {
+        loop();
+    });
 }
 
 function draw() {
     clear()
+    let val = slider.value()
+    frameRate(val);
     if (hull.length == 0) {
         hull.push(xs.indexOf(Math.min(...xs)))
     }
@@ -110,6 +120,17 @@ function draw() {
         stroke('red')
         line(canvas_xs[current], canvas_ys[current], canvas_xs[best], canvas_ys[best])
         stroke(0)
+        noFill()
+        strokeWeight(1)
+        // arc drawing
+        // let dx1 = canvas_xs[current] + 0.4 * (canvas_xs[best] - canvas_xs[current])
+        // let dy1 = canvas_ys[current] + 0.4 * (canvas_ys[best] - canvas_ys[current])
+        // let dx2 = canvas_xs[current] + 0.4 * dir[0]
+        // let dy2 = canvas_ys[current] + 0.4 * dir[1]
+        // a1 = Math.atan2(dy1, dx1)
+        // a2 = Math.atan2(dy2, dx2)
+        // console.log(a1, a2)
+        // arc(canvas_xs[current], canvas_ys[current], 70, 70, a1, a2)
         if (angle > compare) {
             compare = angle
             best    = counter
@@ -158,4 +179,9 @@ function draw() {
             noLoop()      
         }
     }
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth - 50, 2 * windowHeight/3);
+    console.log('a')
 }
